@@ -41,9 +41,13 @@ class AppRouter extends RouterDelegate with ChangeNotifier, PopNavigatorRouterDe
 
       pages: [
         //TODO: Add SplashScreen
+        if(!appStateManager.isInitialized) SplashScreen.page(),
         //TODO: Add LoginScreen
+        if(appStateManager.isInitialized && !appStateManager.isLoggedIn) LoginScreen.page(),
         //TODO: Add OnboardingScreen
+        if(appStateManager.isLoggedIn && !appStateManager.isOnboardingComplete) OnboardingScreen.page(),
         //TODO: Add Home
+        if(appStateManager.isOnboardingComplete) Home.page(appStateManager.getSelectedTap),
         //TODO: Create new item
         //TODO: Select GroceryItemScreen
         //TODO: Add Profile Screen
@@ -59,6 +63,9 @@ class AppRouter extends RouterDelegate with ChangeNotifier, PopNavigatorRouterDe
     }
 
     //TODO: Handle Onboarding and splash
+    if(route.settings.name == FooderlichPages.onboardingPath){
+      appStateManager.logout();
+    }
     //TODO: Handle state when user closes grocery item screen
     //TODO: Handle state when user closes profile screen
     //TODO: Handle when user closes WebView screen
