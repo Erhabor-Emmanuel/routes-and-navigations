@@ -49,9 +49,30 @@ class AppRouter extends RouterDelegate with ChangeNotifier, PopNavigatorRouterDe
         //TODO: Add Home
         if(appStateManager.isOnboardingComplete) Home.page(appStateManager.getSelectedTap),
         //TODO: Create new item
+        if(groceryManager.isCreatingNewItem)
+          GroceryItemScreen.page(
+              onCreate: (item){
+                groceryManager.addItem(item);
+              },
+              onUpdate: (item, index){},
+          ),
         //TODO: Select GroceryItemScreen
+        if(groceryManager.selectedIndex != -1)
+          GroceryItemScreen.page(
+            item: groceryManager.selectedGroceryItem,
+              index: groceryManager.selectedIndex,
+              onCreate: (_){
+              //No creater45
+              },
+              onUpdate: (item, index){
+              groceryManager.updateItem(item, index);
+              },
+          ),
         //TODO: Add Profile Screen
+        if (profileManager.didSelectUser)
+          ProfileScreen.page(profileManager.getUser),
         //TODO: Add WebView Screen
+        if (profileManager.didTapOnRaywenderlich) WebViewScreen.page()
       ],
     );
     }
@@ -67,8 +88,17 @@ class AppRouter extends RouterDelegate with ChangeNotifier, PopNavigatorRouterDe
       appStateManager.logout();
     }
     //TODO: Handle state when user closes grocery item screen
+    if(route.settings.name == FooderlichPages.groceryItemDetails){
+      groceryManager.groceryItemTapped(-1);
+    }
     //TODO: Handle state when user closes profile screen
+    if (route.settings.name == FooderlichPages.profilePath) {
+      profileManager.tapOnProfile(false);
+    }
     //TODO: Handle when user closes WebView screen
+    if (route.settings.name == FooderlichPages.raywenderlich) {
+      profileManager.tapOnRaywenderlich(false);
+    }
     return true;
   }
 
